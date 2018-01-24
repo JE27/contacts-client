@@ -18,11 +18,11 @@ if input_option == "1"
 
   puts JSON.pretty_generate(contacts)
 elsif input_option == "2"
-  print "Enter recipe ID"
+  print "Enter contact ID"
 
   input_id = gets.chomp
 
-  response = Unirest.get("http://localhost:3000/contacts/#{{input_id}}")
+  response = Unirest.get("http://localhost:3000/contacts/#{input_id}")
   contacts = response.body
 
   puts JSON.pretty_generate(contacts)
@@ -46,45 +46,59 @@ elsif input_option == "3"
                           "http://localhost:3000/contacts", 
                           parameters: client_params
     )
-  conacts = response.body
-
-  puts JSON.pretty_generate(contacts)
+  
+  if response.body == 200
+    conacts = response.body
+    puts JSON.pretty_generate(contacts)
+  else 
+    errors = response.body["errors"]
+    errors.each do |error|
+      puts error
+    end
+  end
 
 elsif input_option == "4"
-  print "Enter Hot Sauce id: "
+  print "Enter Contact id: "
   input_id = gets.chomp
 
-  response = Unirest.get("http://localhost:3000/contacts/#{{input_id}}")
+  response = Unirest.get("http://localhost:3000/contacts/#{input_id}")
     conacts = response.body
 
     client_params = {}
 
-  print "First Name(#contacts["first_name"]}): "
+  print "First Name(#contacts[first_name]}): "
   client_params[:first_name] = gets.chomp
-  print "Middle Name(#contacts["middle_name"]}): "
+  print "Middle Name(#contacts[middle_name]}): "
   client_params[:middle_name] = gets.chomp
-  print "Last Name(#contacts["last_name"]}): "
+  print "Last Name(#contacts[last_name]}): "
   client_params[:last_name] = gets.chomp
-  print "Email(#contacts["email"]}): "
+  print "Email(#contacts[email]}): "
   client_params[:email] = gets.chomp
-  print "Phone number(#contacts["phone_number"]}): "
+  print "Phone number(#contacts[phone_number]}): "
   client_params[:phone_number] = gets.chomp
-  print "Bio(#contacts["bio"]}): "
+  print "Bio(#contacts[bio]}): "
   client_params[:bio] = gets.chomp
   
   response = Unirest.patch(
                           "http://localhost:3000/contacts", 
                           parameters: client_params
     )
-  conacts = response.body
-
-  puts JSON.pretty_generate(contacts)
+  
+  if response.body == 200
+    conacts = response.body
+    puts JSON.pretty_generate(contacts)
+  else 
+    errors = response.body["errors"]
+    errors.each do |error|
+      puts error
+    end
+  end
 
 elsif input_option == "5"
-  print "Enter Hot Sauce id:"
+  print "Enter Contact id:"
   input_id = gets.chomp
 
-  response = Unirest.delete("http://localhost:3000/contacts/#{{input_id}}")
+  response = Unirest.delete("http://localhost:3000/contacts/#{input_id}")
   contacts = response.body
   puts contacts["message"]
 end
